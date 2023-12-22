@@ -11,7 +11,40 @@
     <!-- https://assets-global.website-files.com/63345a0dbb88ba168e47236b/63e483cdd574945414541521_Kurero%20Logo%20transparent.png -->
     <meta property="og:url" content="https://dev.applinks.kurero.co"/>
     <meta property="og:type" content="website"/>
+    
+    <script>
+        function getMobileOperatingSystem() {
+          var userAgent = navigator.userAgent || navigator.vendor || window.opera;
+              // Windows Phone must come first because its UA also contains "Android"
+            if (/windows phone/i.test(userAgent)) {
+                return "Windows Phone";
+            }
+            if (/android/i.test(userAgent)) {
+                return "Android";
+            }
+            // iOS detection from: http://stackoverflow.com/a/9039885/177710
+            if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+                return "iOS";
+            }
+            return "unknown";
+        }
+    </script>
+
+<script>
+    function DetectAndServe() {
+        let os = getMobileOperatingSystem();
+        if (os == "Android") {
+            window.location.href = "https://play.google.com/store/apps/details?id=com.kurero.kurero"; 
+        } else if (os == "iOS") {
+            window.location.href = "https://testflight.apple.com/join/BIFQUlc8";
+        } else if (os == "Windows Phone") {
+            window.location.href = "http://www.WindowsPhoneexample.com";
+        } else {
+            window.location.href = "http://www.NowherLandexample.com";
+        }
+    }
+</script>
 </head>
-<body>
+<body onload="DetectAndServe()">
 </body>
 </html>
