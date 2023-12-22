@@ -43,7 +43,16 @@
             }
         }, 1000);
         
-        window.location.href = "kurero.dev://" + window.location.pathname;
+        var url = "kurero.dev://" + window.location.pathname;
+        
+        var req = new XMLHttpRequest();  
+        req.open('GET', url, true);
+        req.send();
+        if (req.status == "200") {
+            window.location.href = url;
+        }
+        console.log(status);
+        console.log(req);
     }
 </script>
 </head>
