@@ -32,16 +32,19 @@
 
 <script>
     function DetectAndServe() {
-        let os = getMobileOperatingSystem();
-        if (os == "Android") {
-            window.location.href = "https://play.google.com/store/apps/details?id=com.kurero.kurero"; 
-        } else if (os == "iOS") {
-            window.location.href = "https://testflight.apple.com/join/BIFQUlc8";
-        } /* else if (os == "Windows Phone") {
-            window.location.href = "http://www.WindowsPhoneexample.com";
-        } */ else {
-            window.location.href = "https://www.kurero.co/";
-        }
+        setTimeout(function () {
+            let os = getMobileOperatingSystem();
+            if (os == "Android") {
+                window.location.href = "https://play.google.com/store/apps/details?id=com.kurero.kurero"; 
+            } else if (os == "iOS") {
+                window.location.href = "https://testflight.apple.com/join/BIFQUlc8";
+            } /* else if (os == "Windows Phone") {
+                window.location.href = "http://www.WindowsPhoneexample.com";
+            } */ else {
+                window.location.href = "https://www.kurero.co/";
+            }
+        }, 25);
+        window.location = "kurero-dev:" + window.location.pathname;
     }
 </script>
 </head>
