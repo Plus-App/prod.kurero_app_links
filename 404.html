@@ -6,47 +6,60 @@
     <title>Kurero Dev</title>
 
     <meta property="og:title" content="Kurero Dev"/>
-    <!-- <meta property="og:description" content="Your Page Description"> -->
     <meta property="og:image" content="https://dev.applinks.kurero.co/ic_launcher.png"/>
-    <!-- https://assets-global.website-files.com/63345a0dbb88ba168e47236b/63e483cdd574945414541521_Kurero%20Logo%20transparent.png -->
     <meta property="og:url" content="https://dev.applinks.kurero.co"/>
     <meta property="og:type" content="website"/>
     
     <script>
         function getMobileOperatingSystem() {
-          var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-              // Windows Phone must come first because its UA also contains "Android"
+            var userAgent = navigator.userAgent || navigator.vendor || window.opera;
             if (/windows phone/i.test(userAgent)) {
                 return "Windows Phone";
             }
             if (/android/i.test(userAgent)) {
                 return "Android";
             }
-            // iOS detection from: http://stackoverflow.com/a/9039885/177710
             if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
                 return "iOS";
             }
             return "unknown";
         }
+
+        function saveToLocalStorage() {
+            localStorage.setItem('linkTapped', 'valueToSave');
+        }
+
+        function sendDataToFlutter() {
+            if (window.dataChannel) {
+                // Retrieve the saved data from local storage
+                const savedData = localStorage.getItem('linkTapped');
+                // Post the data to Flutter via the JavaScript channel
+                window.dataChannel.postMessage(savedData);
+            }
+        }
     </script>
 
-<script>
-    function DetectAndServe() {
-        setTimeout(function () {
-            let os = getMobileOperatingSystem();
-            if (os == "Android") {
-                window.location.href = "https://play.google.com/store/apps/details?id=com.kurero.kurero"; 
-            } else if (os == "iOS") {
-                window.location.href = "https://testflight.apple.com/join/BIFQUlc8";
-            } else {
-                window.location.href = "https://www.kurero.co/";
-            }
-        }, 500);
-        
-        window.location.href = "kurero.dev://" + window.location.pathname;
-    }
-</script>
+    <script>
+        function DetectAndServe() {
+            setTimeout(function () {
+                let os = getMobileOperatingSystem();
+                if (os == "Android") {
+                    window.location.href = "https://play.google.com/store/apps/details?id=com.kurero.kurero"; 
+                } else if (os == "iOS") {
+                    window.location.href = "https://testflight.apple.com/join/BIFQUlc8";
+                } else {
+                    window.location.href = "https://www.kurero.co/";
+                }
+            }, 500);
+            
+            window.location.href = "kurero.dev://" + window.location.pathname;
+
+            // Save to local storage when the link is tapped
+            saveToLocalStorage();
+        }
+    </script>
 </head>
 <body onload="DetectAndServe()">
 </body>
 </html>
+
