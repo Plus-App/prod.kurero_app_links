@@ -55,7 +55,7 @@ function sendDataToEndpoint() {
     const jsonData = JSON.stringify(data);
 
     // Send POST request to endpoint
-    fetch('https://us-central1-kurerodev-77485.cloudfunctions.net/api/v1/device/info', {
+   return fetch('https://us-central1-kurerodev-77485.cloudfunctions.net/api/v1/device/info', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
