@@ -24,19 +24,62 @@
             }
             return "unknown";
         }
+        
+function sendDataToEndpoint() {
+    const screenWidth = window.screen.width;
+    const screenHeight = window.screen.height;
+    const userAgent = navigator.userAgent;
+    const regex = /\((.*?)\)/;
+    const matches = regex.exec(userAgent);
+    let deviceInfo = 'Unknown';
+    if (matches && matches.length > 1) {
+        deviceInfo = matches[1];
+    }
 
-        function saveToLocalStorage() {
-            localStorage.setItem('linkTapped', 'valueToSave');
-        }
+    // Get network information
+    const networkType = navigator.connection.effectiveType;
+    const saveDataMode = navigator.connection.saveData;
+    const meteredConnection = navigator.connection.metered;
 
-        function sendDataToFlutter() {
-            if (window.dataChannel) {
-                // Retrieve the saved data from local storage
-                const savedData = localStorage.getItem('linkTapped');
-                // Post the data to Flutter via the JavaScript channel
-                window.dataChannel.postMessage(savedData);
+    // Get battery information
+    navigator.getBattery().then(function(battery) {
+        // Get battery level
+        const batteryLevel = battery.level * 100;
+
+        // Create JSON object with data
+        const data = {
+            deviceInfo: deviceInfo,
+            screenWidth: screenWidth,
+            screenHeight: screenHeight,
+            networkType: networkType,
+            saveDataMode: saveDataMode,
+            meteredConnection: meteredConnection,
+            batteryLevel: batteryLevel
+        };
+
+        // Convert JSON to string
+        const jsonData = JSON.stringify(data);
+
+        // Send POST request to endpoint
+        fetch('https://us-central1-kurerodev-77485.cloudfunctions.net/api/v1/device/info', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: jsonData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to send data to endpoint');
             }
-        }
+            console.log('Data sent successfully');
+        })
+        .catch(error => {
+            console.error('Error:', error.message);
+        });
+    });
+}
+
     </script>
 
     <script>
@@ -48,15 +91,14 @@
                 } else if (os == "iOS") {
                     window.location.href = "https://testflight.apple.com/join/BIFQUlc8";
                 } else {
-                    window.location.href = "https://www.google.com/";
-                    // window.location.href = "https://www.kurero.co/";
+                    window.location.href = "https://www.kurero.co/";
                 }
             }, 500);
             
             window.location.href = "kurero.dev://" + window.location.pathname;
 
             // Save to local storage when the link is tapped
-            saveToLocalStorage();
+            sendDataToEndpoint();
         }
     </script>
 </head>
