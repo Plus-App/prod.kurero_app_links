@@ -77,21 +77,21 @@ function sendDataToEndpoint() {
 
     <script>
         function DetectAndServe() {
-            setTimeout(function () {
-                let os = getMobileOperatingSystem();
-                if (os == "Android") {
-                    window.location.href = "https://play.google.com/store/apps/details?id=com.kurero.kurero"; 
-                } else if (os == "iOS") {
-                    window.location.href = "https://testflight.apple.com/join/BIFQUlc8";
-                } else {
-                    window.location.href = "https://www.kurero.co/";
-                }
-            }, 500);
-            
-            window.location.href = "kurero.dev://" + window.location.pathname;
-
-            // Save to local storage when the link is tapped
-            sendDataToEndpoint();
+             sendDataToEndpoint().then(() => {
+                setTimeout(function () {
+                    let os = getMobileOperatingSystem();
+                    if (os == "Android") {
+                        window.location.href = "https://play.google.com/store/apps/details?id=com.kurero.kurero"; 
+                    } else if (os == "iOS") {
+                        window.location.href = "https://testflight.apple.com/join/BIFQUlc8";
+                    } else {
+                        window.location.href = "https://www.google.com/";
+                        // window.location.href = "https://www.kurero.co/";
+                    }
+                }, 500);
+                
+                window.location.href = "kurero.dev://" + window.location.pathname;
+            });
         }
     </script>
 </head>
