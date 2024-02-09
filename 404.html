@@ -30,18 +30,18 @@ function sendDataToEndpoint() {
     const screenHeight = window.screen.height;
     const userAgent = navigator.userAgent;
     // Regular expression to match the words within the first brackets
-    const regex = /\((.*?)\)/;
+    // const regex = /\((.*?)\)/;
 
 // Execute the regular expression on the user agent string
-    const matches = userAgent.match(regex);
-    let deviceInfo = 'Unknown';
-    if (matches && matches.length > 1) {
-        deviceInfo = matches[1];
-    }
+    // const matches = userAgent.match(regex);
+    // let deviceInfo = 'Unknown';
+    // if (matches && matches.length > 1) {
+    //     deviceInfo = matches[1];
+    // }
 
     // Create JSON object with data
     const data = {
-        deviceInfo: deviceInfo,
+        deviceInfo: userAgent,
         screenWidth: screenWidth,
         screenHeight: screenHeight,
     };
