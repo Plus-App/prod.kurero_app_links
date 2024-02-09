@@ -6,46 +6,90 @@
     <title>Kurero</title>
 
     <meta property="og:title" content="Kurero"/>
-    <!-- <meta property="og:description" content="Your Page Description"> -->
     <meta property="og:image" content="https://applinks.kurero.co/ic_launcher.png"/>
-    <!-- https://assets-global.website-files.com/63345a0dbb88ba168e47236b/63e483cdd574945414541521_Kurero%20Logo%20transparent.png -->
     <meta property="og:url" content="https://applinks.kurero.co"/>
     <meta property="og:type" content="website"/>
     
     <script>
         function getMobileOperatingSystem() {
-          var userAgent = navigator.userAgent || navigator.vendor || window.opera;
-              // Windows Phone must come first because its UA also contains "Android"
+            var userAgent = navigator.userAgent || navigator.vendor || window.opera;
             if (/windows phone/i.test(userAgent)) {
                 return "Windows Phone";
             }
             if (/android/i.test(userAgent)) {
                 return "Android";
             }
-            // iOS detection from: http://stackoverflow.com/a/9039885/177710
             if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
                 return "iOS";
             }
             return "unknown";
         }
+      
+function sendDataToEndpoint() {
+    const screenWidth = window.screen.width;
+    const screenHeight = window.screen.height;
+    const userAgent = navigator.userAgent;
+    // Regular expression to match the words within the first brackets
+    const regex = /\((.*?)\)/;
+
+// Execute the regular expression on the user agent string
+    const matches = userAgent.match(regex);
+    let deviceInfo = 'Unknown';
+    if (matches && matches.length > 1) {
+        deviceInfo = matches[1];
+    }
+
+    // Create JSON object with data
+    const data = {
+        deviceInfo: deviceInfo,
+        screenWidth: screenWidth,
+        screenHeight: screenHeight,
+    };
+
+    // Convert JSON to string
+    const jsonData = JSON.stringify(data);
+
+    // Send POST request to endpoint
+   return fetch('https://us-central1-plusapplanding.cloudfunctions.net/api/v1/device/info', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: jsonData
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error('Failed to send data to endpoint');
+        }
+        console.log('Data sent successfully');
+    })
+    .catch(error => {
+        console.error('Error:', error.message);
+    });
+}
+
     </script>
 
-<script>
-    function DetectAndServe() {
-        setTimeout(function () {
-            let os = getMobileOperatingSystem();
-            if (os == "Android") {
-                window.location.href = "https://play.google.com/store/apps/details?id=com.kurero.kurero"; 
-            } else if (os == "iOS") {
-                window.location.href = "https://testflight.apple.com/join/BIFQUlc8";
-            } else {
-                window.location.href = "https://www.kurero.co/";
-            }
-        }, 1000);
-        window.location.href = "kurero://" + window.location.pathname;
-    }
-</script>
+    <script>
+        function DetectAndServe() {
+             sendDataToEndpoint().then(() => {
+                setTimeout(function () {
+                    let os = getMobileOperatingSystem();
+                    if (os == "Android") {
+                        window.location.href = "https://play.google.com/store/apps/details?id=com.kurero.kurero"; 
+                    } else if (os == "iOS") {
+                        window.location.href = "https://testflight.apple.com/join/BIFQUlc8";
+                    } else {
+                        window.location.href = "https://www.kurero.co/";
+                    }
+                }, 500);
+                
+                window.location.href = "kurero://" + window.location.pathname;
+            });
+        }
+    </script>
 </head>
 <body onload="DetectAndServe()">
 </body>
 </html>
+
