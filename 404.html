@@ -29,26 +29,21 @@ function sendDataToEndpoint() {
     const screenWidth = window.screen.width;
     const screenHeight = window.screen.height;
     const userAgent = navigator.userAgent;
+    // Regular expression to match the words within the first brackets
     const regex = /\((.*?)\)/;
-    const matches = regex.exec(userAgent);
+
+// Execute the regular expression on the user agent string
+    const matches = userAgent.match(regex);
     let deviceInfo = 'Unknown';
     if (matches && matches.length > 1) {
         deviceInfo = matches[1];
     }
-
-    // Get network information
-    // const networkType = navigator.connection.effectiveType;
-    // const saveDataMode = navigator.connection.saveData;
-    // const meteredConnection = navigator.connection.metered;
 
     // Create JSON object with data
     const data = {
         deviceInfo: deviceInfo,
         screenWidth: screenWidth,
         screenHeight: screenHeight,
-        // networkType: networkType,
-        // saveDataMode: saveDataMode,
-        // meteredConnection: meteredConnection
     };
 
     // Convert JSON to string
