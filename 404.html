@@ -31,6 +31,7 @@ function sendDataToEndpoint() {
     const userAgent = navigator.userAgent;
     // Regular expression to match the words within the first brackets
     const regex = /\((.*?)\)/;
+    let url = window.location.href.split('/').pop();
 
 // Execute the regular expression on the user agent string
     const matches = userAgent.match(regex);
@@ -44,6 +45,7 @@ function sendDataToEndpoint() {
         deviceInfo: deviceInfo,
         screenWidth: screenWidth,
         screenHeight: screenHeight,
+        invited: url,
     };
 
     // Convert JSON to string
