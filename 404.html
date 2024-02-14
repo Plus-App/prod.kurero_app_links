@@ -25,13 +25,13 @@
             return "unknown";
         }
       
-function sendDataToEndpoint() {
+async function sendDataToEndpoint() {
     const screenWidth = window.screen.width;
     const screenHeight = window.screen.height;
     const userAgent = navigator.userAgent;
     // Regular expression to match the words within the first brackets
     const regex = /\((.*?)\)/;
-    let url = window.location.href.split('/').pop();
+    let inviteId = window.location.href.split('/').pop();
 
 // Execute the regular expression on the user agent string
     const matches = userAgent.match(regex);
@@ -45,14 +45,14 @@ function sendDataToEndpoint() {
         deviceInfo: deviceInfo,
         screenWidth: screenWidth,
         screenHeight: screenHeight,
-        inviteId: url,
+        inviteId: inviteId,
     };
 
     // Convert JSON to string
     const jsonData = JSON.stringify(data);
 
     // Send POST request to endpoint
-   return fetch('https://us-central1-plusapplanding.cloudfunctions.net/api/v1/device/info', {
+    fetch('https://us-central1-plusapplanding.cloudfunctions.net/api/v1/device/info', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -68,25 +68,29 @@ function sendDataToEndpoint() {
     .catch(error => {
         console.error('Error:', error.message);
     });
+
+    return inviteId;
 }
 
     </script>
 
     <script>
         function DetectAndServe() {
-             sendDataToEndpoint().then(() => {
+             sendDataToEndpoint().then((inviteId) => {
                 setTimeout(function () {
                     let os = getMobileOperatingSystem();
                     if (os == "Android") {
-                        window.location.href = "https://play.google.com/store/apps/details?id=com.kurero.kurero"; 
+                        window.location.href = "https://play.google.com/store/apps/details?id=com.kurero.kurero&referrer=" + inviteId; 
                     } else if (os == "iOS") {
                         window.location.href = "https://apps.apple.com/app/kurero/id6443891965";
                     } else {
                         window.location.href = "https://www.kurero.co/";
                     }
-                }, 500);
+                }, 200);
                 
                 window.location.href = "kurero://" + window.location.pathname;
+                
+                console.log('Invite ID: ' + inviteId);
             });
         }
     </script>
